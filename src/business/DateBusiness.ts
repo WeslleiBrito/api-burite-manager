@@ -2,14 +2,18 @@ import dotenv from 'dotenv'
 import { InputGetDateDTO } from "../dtos/getDates.dto";
 import z from 'zod'
 import { DateInvalidError } from '../errors/DateInvalidError';
+import { TotalExpensesDatabase } from '../database/TotalExpensesDatabase';
 
 dotenv.config()
 export class DateBusiness {
+    constructor(
+        private databeseExepense: TotalExpensesDatabase
+    ){}
 
     public getDateBusiness = async (input: InputGetDateDTO) => {
         
         const newInput = {
-            initialDate: process.env.INITIAL_DATE,
+            initialDate: process.env.INITIAL_DATE as string,
             finalDate: new Date().toISOString().slice(0, 10)
         }
 
@@ -54,8 +58,8 @@ export class DateBusiness {
             newInput.finalDate = input.finalDate
         }
 
-        return {
-            newInput
-        }
+        const values = await this.databeseExepense.getTotalFixedExpense({initialDate: newInput.initialDate, finalDate: newInput.finalDate})
+
+        return values
     }
 }

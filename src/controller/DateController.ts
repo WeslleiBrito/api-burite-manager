@@ -19,9 +19,12 @@ export class DateController {
                     finalDate: req.body.finalDate
                 }
             )
+            const expense = await this.dateBusiness.getDateBusiness(input)
 
             res.status(200).send(
-                await this.dateBusiness.getDateBusiness(input)
+                {
+                    expense
+                }
             )
 
         } catch (error) {
