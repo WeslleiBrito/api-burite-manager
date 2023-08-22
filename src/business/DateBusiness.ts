@@ -37,7 +37,18 @@ export class DateBusiness {
         if(input.finalDate){
 
             if(!z.coerce.date().safeParse(input.finalDate).success){
-                throw new Error("Data final inválida.")
+                throw new DateInvalidError(
+                    [
+                        {
+                            validation: "date",
+                            code: "invalid_date",
+                            message: "A data informada é inválida.",
+                            path: [
+                                "finalDate"
+                            ]
+                        }
+                    ]
+                )
             }
 
             newInput.finalDate = input.finalDate
