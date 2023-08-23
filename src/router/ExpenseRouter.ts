@@ -3,11 +3,17 @@ import { ExpenseController } from "../controller/ExpenseController"
 import { ExpenseBusiness } from "../business/ExpenseBusiness"
 import { ExpenseDatabase } from "../database/ExpenseDatabase"
 import { BaseDatabase } from "../database/BaseDatabase"
+import { ValidateDates } from "../services/ValidateDates"
 
 export const expenseRouter = express.Router()
 
 const userController = new ExpenseController(
-    new ExpenseBusiness(new ExpenseDatabase(new BaseDatabase()))
+    new ExpenseBusiness(
+        new ExpenseDatabase(
+            new BaseDatabase(),
+        ),
+        new ValidateDates()
+    )
 )
 
 expenseRouter.post('/', userController.getExpense) 

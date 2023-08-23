@@ -1,64 +1,36 @@
 import dotenv from 'dotenv'
 import { InputGetExpenseDTO } from "../dtos/InputGetExpense.dto";
-import z from 'zod'
-import { DateInvalidError } from '../errors/DateInvalidError';
 import { ExpenseDatabase } from '../database/ExpenseDatabase';
+import { ValidateDates } from '../services/ValidateDates';
 
 dotenv.config()
 export class ExpenseBusiness {
     constructor(
-        private databeseExepense: ExpenseDatabase
+        private databeseExepense: ExpenseDatabase,
+        private validateDates: ValidateDates
     ){}
 
     public getExpense = async (input: InputGetExpenseDTO): Promise<{fixed: number, variable: number}> => {
         
-        const newInput = {
-            initialDate: process.env.INITIAL_DATE as string,
-            finalDate: new Date().toISOString().slice(0, 10)
-        }
-
         if(input.initialDate){
 
-            if(!z.coerce.date().safeParse(input.initialDate).success){
-                throw new DateInvalidError(
-                    [
-                        {
-                            validation: "date",
-                            code: "invalid_date",
-                            message: "A data informada é inválida.",
-                            path: [
-                                "initialDate"
-                            ]
-                        }
-                    ]
-                )
-            }
+            this.validateDates.validate({path: "initialDate", dateString: input.initialDate})
 
-            newInput.initialDate = input.initialDate
+        }else{
 
+            input.initialDate = process.env.INITIAL_DATE as string
         }
-
+        
+        
         if(input.finalDate){
 
-            if(!z.coerce.date().safeParse(input.finalDate).success){
-                throw new DateInvalidError(
-                    [
-                        {
-                            validation: "date",
-                            code: "invalid_date",
-                            message: "A data informada é inválida.",
-                            path: [
-                                "finalDate"
-                            ]
-                        }
-                    ]
-                )
-            }
+            this.validateDates.validate({path: "finalDate", dateString: input.finalDate})
 
-            newInput.finalDate = input.finalDate
+        }else{
+            input.finalDate = new Date().toISOString()
         }
 
-        const expenses = await this.databeseExepense.getExpense({initialDate: newInput.initialDate, finalDate: newInput.finalDate})
+        const expenses = await this.databeseExepense.getExpense({initialDate: input.initialDate, finalDate: input.finalDate})
 
         let fixedAmount: number = 0
         let variableAmount: number = 0
@@ -67,8 +39,8 @@ export class ExpenseBusiness {
         expenses.variable.forEach(value => variableAmount += value.vlrparcela)
 
         return {
-            fixed: fixedAmount,
-            variable: variableAmount
+            fixed: Math.ceil(fixedAmount) ,
+            variable: Math.ceil(variableAmount)
         }
     }
 }
