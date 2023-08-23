@@ -7,7 +7,7 @@ import { ValidateDates } from "../services/ValidateDates"
 
 export const expenseRouter = express.Router()
 
-const userController = new ExpenseController(
+const expenseController = new ExpenseController(
     new ExpenseBusiness(
         new ExpenseDatabase(
             new BaseDatabase(),
@@ -16,4 +16,4 @@ const userController = new ExpenseController(
     )
 )
 
-expenseRouter.post('/', userController.getExpense) 
+expenseRouter.post('/', expenseController.getExpense) 

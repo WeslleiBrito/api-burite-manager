@@ -1,3 +1,4 @@
+import { InputGetDatesDTO } from "../dtos/InputGetDates.dto";
 import { BaseDatabase } from "./BaseDatabase";
 
 
@@ -6,7 +7,7 @@ export class ExpenseDatabase {
         private baseDatabase: BaseDatabase
     ){}
 
-    public getExpense = async (input: {initialDate: string , finalDate: string}): Promise<{fixed: Array<{vlrparcela: number}>, variable: Array<{vlrparcela: number}>}> => {
+    public getExpense = async (input: InputGetDatesDTO): Promise<{fixed: Array<{vlrparcela: number}>, variable: Array<{vlrparcela: number}>}> => {
 
         const {initialDate , finalDate} = input
 

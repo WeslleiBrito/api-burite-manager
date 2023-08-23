@@ -1,13 +1,13 @@
 import { Request, Response } from "express";
 import { ZodError } from "zod";
 import { InputGetDatesSchema } from "../dtos/InputGetDates.dto";
-import { ExpenseBusiness } from "../business/ExpenseBusiness";
 import { DateInvalidError } from "../errors/DateInvalidError";
+import { InvoicingBusiness } from "../business/InvoicingBusiness";
 
-export class ExpenseController {
+export class InvoicingController {
 
     constructor(
-        private expenseBusiness: ExpenseBusiness
+        private invoicingBusiness: InvoicingBusiness
     ){}
 
     public getExpense = async (req: Request, res: Response) => {
@@ -19,10 +19,10 @@ export class ExpenseController {
                     finalDate: req.body.finalDate
                 }
             )
-            const expense = await this.expenseBusiness.getExpense(input)
+            const invoicing = await this.invoicingBusiness.getInvoicing(input)
 
             res.status(200).send(
-                expense
+                invoicing
             )
 
         } catch (error) {

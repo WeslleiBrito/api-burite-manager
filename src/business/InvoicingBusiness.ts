@@ -1,16 +1,17 @@
 import dotenv from 'dotenv'
 import { InputGetDatesDTO } from "../dtos/InputGetDates.dto";
-import { ExpenseDatabase } from '../database/ExpenseDatabase';
 import { ValidateDates } from '../services/ValidateDates';
+import { InvoicingDatabase } from '../database/InvoicingDatabase';
 
 dotenv.config()
-export class ExpenseBusiness {
+
+export class InvoicingBusiness {
     constructor(
-        private databeseExepense: ExpenseDatabase,
+        private invoicingBusiness: InvoicingDatabase,
         private validateDates: ValidateDates
     ){}
 
-    public getExpense = async (input: InputGetDatesDTO): Promise<{fixed: number, variable: number}> => {
+    public getInvoicing = async (input: InputGetDatesDTO) => {
         
         if(input.initialDate){
 
@@ -30,17 +31,10 @@ export class ExpenseBusiness {
             input.finalDate = new Date().toISOString()
         }
 
-        const expenses = await this.databeseExepense.getExpense({initialDate: input.initialDate, finalDate: input.finalDate})
-
-        let fixedAmount: number = 0
-        let variableAmount: number = 0
-
-        expenses.fixed.forEach(value => fixedAmount += value.vlrparcela)
-        expenses.variable.forEach(value => variableAmount += value.vlrparcela)
+        const expenses = await this.invoicingBusiness.getInvoicing({initialDate: input.initialDate, finalDate: input.finalDate})
 
         return {
-            fixed: Math.ceil(fixedAmount) ,
-            variable: Math.ceil(variableAmount)
+            expenses
         }
     }
 }
