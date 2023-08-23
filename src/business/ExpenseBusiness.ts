@@ -1,16 +1,16 @@
 import dotenv from 'dotenv'
-import { InputGetDateDTO } from "../dtos/getDates.dto";
+import { InputGetExpenseDTO } from "../dtos/InputGetExpense.dto";
 import z from 'zod'
 import { DateInvalidError } from '../errors/DateInvalidError';
-import { TotalExpensesDatabase } from '../database/TotalExpensesDatabase';
+import { ExpenseDatabase } from '../database/ExpenseDatabase';
 
 dotenv.config()
-export class DateBusiness {
+export class ExpenseBusiness {
     constructor(
-        private databeseExepense: TotalExpensesDatabase
+        private databeseExepense: ExpenseDatabase
     ){}
 
-    public getDateBusiness = async (input: InputGetDateDTO) => {
+    public getExpense = async (input: InputGetExpenseDTO): Promise<{fixed: number, variable: number}> => {
         
         const newInput = {
             initialDate: process.env.INITIAL_DATE as string,
@@ -58,8 +58,17 @@ export class DateBusiness {
             newInput.finalDate = input.finalDate
         }
 
-        const values = await this.databeseExepense.getTotalFixedExpense({initialDate: newInput.initialDate, finalDate: newInput.finalDate})
+        const expenses = await this.databeseExepense.getExpense({initialDate: newInput.initialDate, finalDate: newInput.finalDate})
 
-        return values
+        let fixedAmount: number = 0
+        let variableAmount: number = 0
+
+        expenses.fixed.forEach(value => fixedAmount += value.vlrparcela)
+        expenses.variable.forEach(value => variableAmount += value.vlrparcela)
+
+        return {
+            fixed: fixedAmount,
+            variable: variableAmount
+        }
     }
 }

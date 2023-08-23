@@ -1,30 +1,28 @@
 import { Request, Response } from "express";
 import { ZodError } from "zod";
-import { InputGetDateSchema } from "../dtos/getDates.dto";
-import { DateBusiness } from "../business/DateBusiness";
+import { InputGetExpenseSchema } from "../dtos/InputGetExpense.dto";
+import { ExpenseBusiness } from "../business/ExpenseBusiness";
 import { DateInvalidError } from "../errors/DateInvalidError";
 
-export class DateController {
+export class ExpenseController {
 
     constructor(
-        private dateBusiness: DateBusiness
+        private dateBusiness: ExpenseBusiness
     ){}
 
-    public getDate = async (req: Request, res: Response) => {
+    public getExpense = async (req: Request, res: Response) => {
         
         try {
-            const input = InputGetDateSchema.parse(
+            const input = InputGetExpenseSchema.parse(
                 {
                     initialDate: req.body.initialDate,
                     finalDate: req.body.finalDate
                 }
             )
-            const expense = await this.dateBusiness.getDateBusiness(input)
+            const expense = await this.dateBusiness.getExpense(input)
 
             res.status(200).send(
-                {
-                    expense
-                }
+                expense
             )
 
         } catch (error) {
