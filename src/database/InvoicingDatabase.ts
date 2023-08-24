@@ -15,6 +15,7 @@ export class InvoicingDatabase {
         const invoicing = await this.baseDatabase.connection("venda_item")
         .whereBetween("venda_item.dtvenda", [initialDate, finalDate])
         .innerJoin("venda", "venda_item.venda", "venda.vend_cod")
+        .innerJoin("funcionario", "funcionario.fun_cod", "vendedor")
 
         return invoicing
     }

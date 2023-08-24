@@ -34,7 +34,7 @@ export class InvoicingBusiness {
         const expenses = await this.invoicingBusiness.getInvoicing({initialDate: input.initialDate, finalDate: input.finalDate})
 
         return {
-            expenses
+            expenses: expenses.slice(0, 5)
         }
     }
 }

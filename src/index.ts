@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { expenseRouter } from './router/ExpenseRouter';
+import { expenseRouter } from './router/expenseRouter';
 import { invoicingRouter } from './router/invoicingRouter';
 
 
