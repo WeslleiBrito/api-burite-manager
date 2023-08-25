@@ -14,4 +14,5 @@ const invoicingController = new InvoicingController(
     )
 )
 
-invoicingRouter.get('/', invoicingController.getExpense) 
+invoicingRouter.get('/products', invoicingController.getInvoicingProducts) 
+invoicingRouter.get('/subgroup', invoicingController.getInvoicingSubgroup) 

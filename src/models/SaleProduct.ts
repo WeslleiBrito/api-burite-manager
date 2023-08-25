@@ -7,6 +7,7 @@ export class SaleProduct {
         private seller: string,
         private codeProduct: number,
         private description: string,
+        private subGroup: string,
         private quantity: number,
         private originalUnitSale: number,
         private returnedQuantity: number,
@@ -23,6 +24,7 @@ export class SaleProduct {
             seller: this.seller,
             codeProduct: this.codeProduct,
             description: this.description,
+            subGroup: this.subGroup,
             quantity: this.quantity,
             originalUnitSale: this.originalUnitSale,
             returnedQuantity: this.returnedQuantity,
@@ -56,6 +58,10 @@ export class SaleProduct {
 
     public getDescription = (): string => {
         return this.description
+    }
+
+    public getSubGroup = (): string => {
+        return this.subGroup
     }
 
     public getQuantity = (): number => {
@@ -96,6 +102,7 @@ export type TSaleProduct = {
     seller: string,
     codeProduct: number,
     description: string,
+    subGroup: string,
     quantity: number,
     originalUnitSale: number,
     returnedQuantity: number,

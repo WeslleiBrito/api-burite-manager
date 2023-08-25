@@ -3,16 +3,17 @@ import { InputGetDatesDTO } from "../dtos/InputGetDates.dto";
 import { ValidateDates } from '../services/ValidateDates';
 import { InvoicingDatabase } from '../database/InvoicingDatabase';
 import { SaleProduct } from '../models/SaleProduct';
+import { InvoicingSubGroupBusiness } from './InvoicingSubgroupBusiness';
 
 dotenv.config()
 
 export class InvoicingBusiness {
     constructor(
-        private invoicingBusiness: InvoicingDatabase,
+        private invoicingDatabase: InvoicingDatabase,
         private validateDates: ValidateDates
     ){}
 
-    public getInvoicing = async (input: InputGetDatesDTO) => {
+    public getInvoicing = async (input: InputGetDatesDTO): Promise<SaleProduct[]> => {
         
         if(input.initialDate){
 
@@ -32,7 +33,7 @@ export class InvoicingBusiness {
             input.finalDate = new Date().toISOString()
         }
 
-        const expenses = (await this.invoicingBusiness.getInvoicing({initialDate: input.initialDate, finalDate: input.finalDate})).map(saleProductDB => {
+        const invoicing: Array<SaleProduct> = (await this.invoicingDatabase.getInvoicing({initialDate: input.initialDate, finalDate: input.finalDate})).map(saleProductDB => {
             return new SaleProduct(
                 saleProductDB.venda,
                 saleProductDB.nome,
@@ -40,17 +41,39 @@ export class InvoicingBusiness {
                 saleProductDB.fun_nome,
                 saleProductDB.produto,
                 saleProductDB.descricao,
+                saleProductDB.subprod_descricao,
                 saleProductDB.qtd,
                 saleProductDB.vrunitario,
                 saleProductDB.qtd_devolvida,
                 saleProductDB.vrcusto_composicao,
                 saleProductDB.desconto,
                 saleProductDB.total
-            ).getSaleProduct()
+            )
         })
 
-        return {
-            expenses: expenses.slice(0, 5)
-        }
+
+        return invoicing
+        
+    }
+
+    private invoicingSubGroup = async () => {
+        
+        const invoicingProducts = await this.getInvoicing({initialDate: process.env.INITIAL_DATE as string, finalDate: new Date().toISOString()})
+        
+        const namesSubgroup = await this.invoicingDatabase.getNameSubgroups()
+
+        const listSubgrups = namesSubgroup.map(name => {
+            return {
+                
+            }
+        })
+        
+        return listSubgrups
+
+    }
+
+
+    public getInvoicingSubGroup = async () => {
+        return await this.invoicingSubGroup()
     }
 }

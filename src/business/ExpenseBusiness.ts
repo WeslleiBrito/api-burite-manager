@@ -32,15 +32,11 @@ export class ExpenseBusiness {
 
         const expenses = await this.databeseExepense.getExpense({initialDate: input.initialDate, finalDate: input.finalDate})
 
-        let fixedAmount: number = 0
-        let variableAmount: number = 0
-
-        expenses.fixed.forEach(value => fixedAmount += value.vlrparcela)
-        expenses.variable.forEach(value => variableAmount += value.vlrparcela)
-
+       
         return {
-            fixed: Math.ceil(fixedAmount) ,
-            variable: Math.ceil(variableAmount)
+            fixed: Math.ceil(expenses.fixed.reduce((amount, value) => amount + value.vlrparcela, 0)),
+            variable: Math.ceil(expenses.variable.reduce((amount, value) => amount + value.vlrparcela, 0))
         }
+
     }
 }

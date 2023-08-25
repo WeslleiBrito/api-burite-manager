@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { expenseRouter } from './router/expenseRouter';
 import { invoicingRouter } from './router/invoicingRouter';
+import { invoicingSubgroupRouter } from './router/invoicingSubgroupRouter';
 
 
 
@@ -19,3 +20,4 @@ app.listen(Number(process.env.PORT || 3003), () => {
 
 app.use('/expenses', expenseRouter)
 app.use('/invoicing', invoicingRouter)
+app.use('/invoicingSubgroup', invoicingSubgroupRouter)

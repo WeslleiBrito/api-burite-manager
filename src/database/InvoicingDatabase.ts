@@ -25,13 +25,23 @@ export class InvoicingDatabase {
             "venda_item.qtd_devolvida",
             "venda_item.vrcusto_composicao",
             "venda_item.desconto",
-            "venda_item.total"
+            "venda_item.total",
+            "subgrupo_produtos.subprod_descricao"
         )
         .whereBetween("venda_item.dtvenda", [initialDate, finalDate])
         .innerJoin("venda", "venda_item.venda", "venda.vend_cod")
         .innerJoin("funcionario", "funcionario.fun_cod", "vendedor")
+        .innerJoin("produto", "produto.prod_cod", "venda_item.produto")
+        .innerJoin("subgrupo_produtos", "subgrupo_produtos.subprod_cod", "produto.prod_subgrupo")
 
         return invoicing
+    }
+
+    public getNameSubgroups = async (): Promise<string[]> => {
+        
+        const subgroups: NameSubgroup[] = await this.baseDatabase.connection("subgrupo_produtos").select("subprod_descricao")
+
+        return subgroups.map(subGroup => subGroup.subprod_descricao)
     }
 }
 
@@ -47,5 +57,10 @@ export interface SaleProductsDB {
     qtd_devolvida: number,
     vrcusto_composicao: number,
     desconto: number,
-    total: number
+    total: number,
+    subprod_descricao: string
+}
+
+export interface NameSubgroup {
+    subprod_descricao: string
 }

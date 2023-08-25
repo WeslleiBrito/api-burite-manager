@@ -16,4 +16,4 @@ const expenseController = new ExpenseController(
     )
 )
 
-expenseRouter.post('/', expenseController.getExpense) 
+expenseRouter.get('/', expenseController.getExpense) 
