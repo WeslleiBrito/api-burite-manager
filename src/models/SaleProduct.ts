@@ -2,6 +2,7 @@
 export class SaleProduct {
     constructor(
         private sale: number,
+        private client: string,
         private dateSale: string,
         private seller: string,
         private codeProduct: number,
@@ -17,6 +18,7 @@ export class SaleProduct {
     public getSaleProduct = (): TSaleProduct => {
         return {
             sale: this.sale,
+            client: this.client,
             dateSale: this.dateSale,
             seller: this.seller,
             codeProduct: this.codeProduct,
@@ -34,6 +36,10 @@ export class SaleProduct {
 
     public getSale = (): number => {
         return this.sale
+    }
+
+    public getClient = (): string => {
+        return this.client
     }
 
     public getDateSale = (): string => {
@@ -85,6 +91,7 @@ export class SaleProduct {
 
 export type TSaleProduct = {
     sale: number,
+    client: string,
     dateSale: string,
     seller: string,
     codeProduct: number,

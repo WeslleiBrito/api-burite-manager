@@ -14,4 +14,4 @@ const invoicingController = new InvoicingController(
     )
 )
 
-invoicingRouter.post('/', invoicingController.getExpense) 
+invoicingRouter.get('/', invoicingController.getExpense) 
