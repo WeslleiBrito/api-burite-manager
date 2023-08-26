@@ -12,8 +12,11 @@ export class SaleProduct {
         private originalUnitSale: number,
         private returnedQuantity: number,
         private unitCost: number,
+        private amountCost: number,
         private discount: number,
-        private amountSele: number
+        private unitSaleValue: number,
+        private amountSele: number,
+        private expenseFixed: number,
     ){}
 
     public getSaleProduct = (): TSaleProduct => {
@@ -28,11 +31,13 @@ export class SaleProduct {
             quantity: this.quantity,
             originalUnitSale: this.originalUnitSale,
             returnedQuantity: this.returnedQuantity,
-            unitCost: this.getUnitCost(),
-            amountCost: this.getAmountCost(),
-            unitSaleValue: this.getUnitSaleValue(),
-            discount: this.getDiscount(),
-            amountSele: this.getAmountSale()
+            unitCost: this.unitCost,
+            amountCost: this.amountCost,
+            unitSaleValue: this.unitSaleValue,
+            discount: this.discount,
+            amountSele: this.amountSele,
+            expenseFixed: this.expenseFixed
+
         }
     }
 
@@ -65,7 +70,7 @@ export class SaleProduct {
     }
 
     public getQuantity = (): number => {
-        return this.quantity - this.returnedQuantity
+        return this.quantity
     }
 
     public getOriginalUnitSale = (): number => {
@@ -73,23 +78,26 @@ export class SaleProduct {
     }
 
     public getUnitCost = (): number => {
-        return this.getQuantity() ? this.unitCost : 0
+        return this.unitCost
     }
     
     public getAmountCost = (): number => {
-        return this.getQuantity() ? this.unitCost * this.getQuantity() : 0
+        return this.unitCost
     }
 
     public getUnitSaleValue = (): number => {
-        return this.getQuantity() ? this.amountSele / this.getQuantity() : 0
+        return this.amountSele
     }
 
     public getDiscount = (): number => {
-        return this.getQuantity() ? (this.discount / this.quantity) * this.getQuantity() : 0
+        return this.discount
     }
 
     public getAmountSale = (): number => {
-        return this.getQuantity() ? ((this.amountSele / this.quantity)) * this.getQuantity() : 0
+        return this.amountSele
+    }
+    public getExpenseFixed = (): number => {
+        return this.expenseFixed
     }
 
 }
@@ -110,5 +118,6 @@ export type TSaleProduct = {
     amountCost: number,
     unitSaleValue: number,
     discount: number,
-    amountSele: number
+    amountSele: number,
+    expenseFixed: number
 }

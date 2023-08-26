@@ -46,8 +46,9 @@ export class InvoicingController {
                     finalDate: req.body.finalDate
                 }
             )
-            const invoicingSubgroup = await this.invoicingBusiness.getInvoicingSubGroup()
 
+            const invoicingSubgroup = await this.invoicingBusiness.getInvoicing(input)
+            
             res.status(200).send(
                 invoicingSubgroup
             )
