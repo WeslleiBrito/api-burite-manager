@@ -77,6 +77,10 @@ export class SaleProduct {
         return this.originalUnitSale
     }
 
+    public getReturnedQuantity = (): number => {
+        return this.returnedQuantity
+    }
+    
     public getUnitCost = (): number => {
         return this.unitCost
     }
