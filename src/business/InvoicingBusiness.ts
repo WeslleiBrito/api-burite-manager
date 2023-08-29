@@ -49,7 +49,8 @@ export class InvoicingBusiness {
             const discount = quantity ? (saleProductDB.desconto / saleProductDB.qtd) * quantity : 0
             const amountCost = quantity ? unitCost * quantity : 0
             const amountSele = quantity ? unitSaleValue * quantity : 0
-            const fixedExpense = roundNumber(2, fixedSubgroup[saleProductDB.subprod_descricao] * quantity)
+
+            const fixedExpense = roundNumber(2, fixedSubgroup[saleProductDB.subprod_descricao].fixedExpense * quantity)
 
            
             return new SaleProduct(
@@ -79,40 +80,29 @@ export class InvoicingBusiness {
 
     public getExepenseFixedSubgroup = async () => {
         
-            const invoicing = (await this.invoicingDatabase.getInvoicing({initialDate: process.env.INITIAL_DATE as string, finalDate: new Date().toISOString()})).map(product => {
+            const invoicing = (await this.invoicingDatabase.getFixedSubroup()).map(product => {
                 const quantity = product.qtd - product.qtd_devolvida
-                const unitCost = quantity ? product.vrcusto_composicao : 0
                 const unitSaleValue = quantity ? (product.total / quantity) : 0
                 const discount = quantity ? (product.desconto / product.qtd) * quantity : 0
-                const amountCost = quantity ? unitCost * quantity : 0
                 const amountSele = quantity ? unitSaleValue * quantity : 0
 
                 return  {
-                    sale: product.venda,
-                    client: product.nome,
-                    dateSale: product.dtvenda,
-                    seller: product.fun_nome,
-                    codeProduct: product.produto,
-                    description: product.descricao,
+                    code: product.subprod_cod,
                     subGroup: product.subprod_descricao,
-                    quantity: quantity,
-                    originalUnitSale:  product.vrunitario,
+                    quantity,
                     returnedQuantity: product.qtd_devolvida,
-                    unitCost,
-                    amountCost,
                     discount,
                     unitSaleValue,
                     amountSele,
-                    
                 }
                 
-        })
+            })
 
         const fixedTotal = (await this.expenseDatabase.getExpense({initialDate: process.env.INITIAL_DATE as string, finalDate: new Date().toISOString()})).fixed.reduce((amout, expense) => amout + expense.vlrparcela, 0)
         const invoicingTotal = invoicing.reduce((amount, product) => amount + product.amountSele, 0)
        
         
-        const fixedSubgroup: {[key: string]: number} = {}
+        const fixedSubgroup: {[key: string]: {invoicing: number, quantity: number, discount: number, fixedExpense: number, code: number}} = {}
 
        invoicing.forEach((product) => {
             if(!fixedSubgroup[product.subGroup]){
@@ -121,10 +111,19 @@ export class InvoicingBusiness {
                 
                 const invoicingSubgroup = filterSubgroup.reduce((amount, prod) => amount + prod.amountSele, 0)
                 const quantity =  filterSubgroup.reduce((amount, prod) => amount + prod.quantity, 0)
+                const discount = filterSubgroup.reduce((amount, prod) => amount + prod.discount, 0)
 
-                fixedSubgroup[product.subGroup] = ((invoicingSubgroup / invoicingTotal) * fixedTotal) / quantity
+                fixedSubgroup[product.subGroup] = {
+                    code: product.code,
+                    invoicing: invoicingSubgroup,
+                    quantity,
+                    discount,
+                    fixedExpense: ((invoicingSubgroup / invoicingTotal) * fixedTotal) / quantity
+                }
             }
         })
+        
+        console.log(fixedSubgroup);
         
         return fixedSubgroup
     }

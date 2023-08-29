@@ -1,4 +1,4 @@
--- Active: 1692360260561@@192.168.0.112@3307@clarionerp
+-- Active: 1693332692998@@192.168.0.112@3307@clarionerp
 
 
 SELECT * FROM pagar_rateio;
@@ -23,3 +23,10 @@ INNER JOIN pagar_rateio ON pagar_rateio.rateio_tipoconta = tipoconta.tipocont_co
 SELECT SUM(pagar_rateio.rateio_vlrparcela) AS "Valor da Parcela" FROM tipoconta
 INNER JOIN pagar_rateio ON pagar_rateio.rateio_tipoconta = tipoconta.tipocont_cod WHERE pagar_rateio.rateio_dtvencimento BETWEEN "2020-08-26" AND DATE(CURDATE())  AND tipoconta.conta_fixa = 0 AND tipoconta.tipocont_cod <> 79 AND tipoconta.tipocont_cod <> 75; 
 
+CREATE TABLE IF NOT EXISTS subgroupsExepenseFixed (
+    id INTEGER NOT NULL,
+    name TEXT NOT NULL,
+    value DOUBLE NOT NULL
+);
+
+DROP TABLE IF EXISTS subgroupsexepensefixed;

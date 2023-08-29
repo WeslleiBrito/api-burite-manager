@@ -19,7 +19,7 @@ export class InvoicingController {
                     finalDate: req.body.finalDate
                 }
             )
-            const invoicingProducts = await this.invoicingBusiness.getInvoicing(input)
+            const invoicingProducts = await this.invoicingBusiness.getExepenseFixedSubgroup()
 
             res.status(200).send(
                 invoicingProducts
@@ -47,7 +47,7 @@ export class InvoicingController {
                 }
             )
 
-            const invoicingSubgroup = await this.invoicingBusiness.getInvoicing(input)
+            const invoicingSubgroup = await this.invoicingBusiness.getExepenseFixedSubgroup()
             
             res.status(200).send(
                 invoicingSubgroup
